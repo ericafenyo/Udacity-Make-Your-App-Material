@@ -10,14 +10,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,7 +53,7 @@ import static com.example.xyzreader.data.ArticleLoader.Query.ASPECT_RATIO;
  * activity presents a grid of items as cards.
  */
 public class ArticleListActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = ArticleListActivity.class.toString();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
@@ -65,6 +70,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_article_list);
         ButterKnife.bind(this);
 
@@ -83,6 +89,9 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             refresh();
         }
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+
     }
 
     private void refresh() {
@@ -107,6 +116,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 
     private boolean mIsRefreshing = false;
 
@@ -147,6 +157,12 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mRecyclerView.setAdapter(null);
+    }
+
+    @Override
+    public void onRefresh() {
+        refresh();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
 
@@ -235,6 +251,24 @@ public class ArticleListActivity extends AppCompatActivity implements
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+    }
+
+    /**
+     * Uses Google.Pallets library To extract colors from Image Bitmaps
+     * @param bitmap Image bitmap
+     */
+    public void setColorFromImage(final Bitmap bitmap) {
+        final Drawable shareIcon = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_share);
+
+        if (bitmap != null) {
+            Palette.from(bitmap).maximumColorCount(1000).generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+
+                }
+            });
         }
     }
 }

@@ -6,5 +6,5 @@
         android:id="@+id/action_settings"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_format_size"
-        android:title="@string/action_settings" />
+        android:title="@string/action_text_size" />
 </menu>

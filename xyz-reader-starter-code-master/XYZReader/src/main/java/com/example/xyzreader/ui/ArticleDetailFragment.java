@@ -45,6 +45,7 @@ import com.example.xyzreader.utils.HelperMethods;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 /**
  * A fragment representing a single Article detail screen. This fragment is
  * either contained in a {@link ArticleListActivity} in two-pane mode (on
@@ -77,10 +78,6 @@ public class ArticleDetailFragment extends Fragment implements
     @BindView(R.id.share_fab)
     FloatingActionButton fab;
 
-//    @BindView(R.id.collapsing_toolbar)
-//    CollapsingToolbarLayout collapsingToolbarLayout;
-
-
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
@@ -110,7 +107,6 @@ public class ArticleDetailFragment extends Fragment implements
             mItemId = getArguments().getLong(ARG_ITEM_ID);
         }
     }
-
 
     public ArticleDetailActivity getActivityCast() {
         return (ArticleDetailActivity) getActivity();
@@ -149,8 +145,6 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
         bindViews();
-
-
         return mRootView;
     }
 
@@ -215,9 +209,6 @@ public class ArticleDetailFragment extends Fragment implements
                                 Palette p = Palette.generate(bitmap, 12);
                                 mMutedColor = p.getDarkMutedColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
-//                                mRootView.findViewById(R.id.linear_layout)
-//                                        .setBackgroundColor(mMutedColor);
-                                setColorFromImage(imageContainer.getBitmap());
                             }
                         }
 
@@ -234,7 +225,11 @@ public class ArticleDetailFragment extends Fragment implements
         }
     }
 
-    float returnCheckItem() {
+    /**
+     * @return "body text size" after the user clicks a radio button on the configuration dialog
+     * box
+     */
+    private float returnCheckItem() {
         switch (mChechedItem) {
             case 0:
                 return 14;
@@ -249,7 +244,7 @@ public class ArticleDetailFragment extends Fragment implements
                 return 24;
 
             default:
-                return 12;
+                return 16;
         }
     }
 
@@ -280,22 +275,6 @@ public class ArticleDetailFragment extends Fragment implements
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mCursor = null;
         bindViews();
-    }
-
-
-    //Using Google.Pallets To extract from Bitmaps
-    public void setColorFromImage(final Bitmap bitmap) {
-        final Drawable shareIcon = ContextCompat.getDrawable(getActivity(), R.drawable.ic_share);
-
-        if (bitmap != null) {
-            Palette.from(bitmap).maximumColorCount(1000).generate(new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    Palette.Swatch swatch = palette.getDarkVibrantSwatch();
-
-                }
-            });
-        }
     }
 
 }

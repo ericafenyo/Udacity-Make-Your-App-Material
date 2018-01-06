@@ -18,15 +18,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.WindowInsetsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -35,15 +31,11 @@ import com.example.xyzreader.utils.HelperMethods;
 
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
 public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
-
     private Cursor mCursor;
     private long mStartId;
     private ViewPager mPager;
@@ -61,6 +53,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (Build.VERSION.SDK_INT >=
                 Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(
@@ -68,8 +61,8 @@ public class ArticleDetailActivity extends AppCompatActivity
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
         setContentView(R.layout.activity_article_detail);
+
         preferences = getSharedPreferences(PREF_TEXT_SIZE, MODE_PRIVATE);
-        ButterKnife.bind(this);
 
         // configures and add back arrow to toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_detail);
@@ -84,15 +77,14 @@ public class ArticleDetailActivity extends AppCompatActivity
             });
         }
 
-
         getLoaderManager().initLoader(0, null, this);
 
         int mDefaultCheckedItem = 1;
+
+        //initialize variables for configuration dialog box
         mChechedItem = HelperMethods.getTextPreferences(getApplicationContext(),
                 PREF_TEXT_SIZE_KEY, mDefaultCheckedItem);
-
         textSizeItems = getResources().getStringArray(R.array.text_size_values);
-
 
         mPagerAdapter = new MyPagerAdapter(getFragmentManager());
         mPager = findViewById(R.id.pager);
@@ -137,6 +129,9 @@ public class ArticleDetailActivity extends AppCompatActivity
                     mCursor.moveToPosition(position);
                 }
                 mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
+
+                //saves view pager scroll position
+                //this value is retrieved and used in configuration dialog box
                 HelperMethods.storeTextPreferences(getApplicationContext(), PREF_PAGE_POS, position);
             }
         });
@@ -144,7 +139,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().getData() != null) {
                 mStartId = ItemsContract.Items.getItemId(getIntent().getData());
-
                 mSelectedItemId = mStartId;
             }
         }
@@ -153,6 +147,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //resets saved viewpager scroll position to zero
         HelperMethods.storeTextPreferences(getApplicationContext(), PREF_PAGE_POS, 0);
     }
 
@@ -174,23 +169,20 @@ public class ArticleDetailActivity extends AppCompatActivity
                             @Override
                             public void onClick(DialogInterface dialogInterface, int position) {
                                 checkPreferenceChange();
+                                //saves the position of radio buttons in configuration dialog box
                                 HelperMethods.storeTextPreferences(getApplicationContext(),
                                         PREF_TEXT_SIZE_KEY, position);
 
+                                //this refreshes the page(fragment) after the user selects a text
+                                // size
                                 mPager.setAdapter(mPagerAdapter);
+                                // "itemId" = viewpager current position(mPager.getCurrentItem())
+                                // position is maintained after the page refreshes
                                 mPager.setCurrentItem(itemId);
-
-//                                HelperMethods.makeToast(getApplicationContext(),mPager.getCurrentItem());
-//
-//
                             }
                         }).setPositiveButton(R.string.positive_text, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-//                                finish();
-//                                startActivity(getIntent());
-
-
                                 dialogInterface.dismiss();
                             }
                         });
@@ -227,8 +219,10 @@ public class ArticleDetailActivity extends AppCompatActivity
         }
     }
 
-
-    void checkPreferenceChange() {
+    /**
+     * gets stored shared preference values without restarting the activity
+     */
+    private void checkPreferenceChange() {
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(
@@ -251,7 +245,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         mCursor = null;
         mPagerAdapter.notifyDataSetChanged();
     }
-
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
         public MyPagerAdapter(FragmentManager fm) {
