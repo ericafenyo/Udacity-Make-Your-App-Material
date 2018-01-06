@@ -1,0 +1,38 @@
+<resources>
+
+    <string name="app_name">XYZ Reader</string>
+    <string name="welcome_xyz_reader">Welcome to XYZ Reader!</string>
+
+    <string name="action_search">Search</string>
+    <string name="action_text_size">Settings</string>
+    <string name="action_share">Share</string>
+
+    <string name="up">Up</string>
+    <string name="transition_photo">transition_photo_name</string>
+    <string name="content_description">contentDescription</string>
+
+    <!--font family-->
+    <string name="font_family_medium">sans-serif-medium</string>
+    <string name="font_family_regular">sans-serif</string>
+    <string name="font_family_black">sans-serif-black</string>
+    <string name="settings">Text size</string>
+    <string name="by_concat">"By " </string>
+    <string name="slash_concat">/</string>
+
+
+    <!--Text size Configuration-->
+    <string name="text_size">Text Size</string>
+    <string name="text_size_small">Small</string>
+    <string name="text_size_default">Normal</string>
+    <string name="text_size_medium">Medium</string>
+    <string name="text_size_large">Large</string>
+    <string name="positive_text">OK</string>
+    <string name="action_settings">Text size</string>
+
+    <string-array name="text_size_values">
+        <item>@string/text_size_small</item>
+        <item>@string/text_size_default</item>
+        <item>@string/text_size_medium</item>
+        <item>@string/text_size_large</item>
+    </string-array>
+</resources>
