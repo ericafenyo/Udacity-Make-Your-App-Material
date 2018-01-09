@@ -1,17 +1,17 @@
 <resources>
-    <string name="app_name">XYZ Reader</string>
-    <string name="welcome_xyz_reader">Welcome to XYZ Reader!</string>
+    <string name="app_name" translatable="false">XYZ Reader</string>
+    <string name="welcome_xyz_reader" translatable="false">Welcome to XYZ Reader!</string>
     <string name="up">Up</string>
-    <string name="transition_photo">transition_photo_name</string>
-    <string name="content_description">contentDescription</string>
-    <string name="slash_concat">/</string>
+    <string name="transition_photo" translatable="false">transition_photo_name</string>
+    <string name="content_description" translatable="false">contentDescription</string>
+    <string name="slash_concat" translatable="false">/</string>
     <string name="by_concat">"By " </string>
     <string name="positive_text">OK</string>
 
     <!--font family-->
-    <string name="font_family_medium">sans-serif-medium</string>
-    <string name="font_family_regular">sans-serif</string>
-    <string name="font_family_black">sans-serif-black</string>
+    <string name="font_family_medium" translatable="false">sans-serif-medium</string>
+    <string name="font_family_regular" translatable="false">sans-serif</string>
+    <string name="font_family_black" translatable="false">sans-serif-black</string>
 
     <!--action menu-->
     <string name="action_search">Search</string>
@@ -30,6 +30,8 @@
     <string name="article_body_text_size_normal">16</string>
     <string name="article_body_text_size_medium">20</string>
     <string name="article_body_text_size_large">24</string>
+    <string name="loader_finished_message">LOADING COMPLETE</string>
+    <string name="no_connectivity">NO INTERNET ACCESS</string>
 
     <!--configuration dialog box string array-->
     <string-array name="text_size_values">

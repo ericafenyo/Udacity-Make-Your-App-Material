@@ -5,13 +5,17 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.OnApplyWindowInsetsListener;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
@@ -31,11 +35,14 @@ import com.example.xyzreader.utils.HelperMethods;
 
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
 public class ArticleDetailActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
     private Cursor mCursor;
     private long mStartId;
     private ViewPager mPager;
@@ -50,6 +57,9 @@ public class ArticleDetailActivity extends AppCompatActivity
     private static final String PREF_PAGE_POS = "pref_page_pos";
     int itemId;
 
+    @BindView(R.id.share_fab)
+    FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,11 +71,12 @@ public class ArticleDetailActivity extends AppCompatActivity
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
         setContentView(R.layout.activity_article_detail);
+        ButterKnife.bind(this);
 
         preferences = getSharedPreferences(PREF_TEXT_SIZE, MODE_PRIVATE);
 
         // configures and add back arrow to toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar_detail);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_detail);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back));
@@ -77,6 +88,8 @@ public class ArticleDetailActivity extends AppCompatActivity
             });
         }
 
+        fab.setOnClickListener(this);
+
         getLoaderManager().initLoader(0, null, this);
 
         int mDefaultCheckedItem = 1;
@@ -87,7 +100,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         textSizeItems = getResources().getStringArray(R.array.text_size_values);
 
         mPagerAdapter = new MyPagerAdapter(getFragmentManager());
-        mPager = findViewById(R.id.pager);
+        mPager = (ViewPager) findViewById(R.id.pager);
 
 
         ViewCompat.setOnApplyWindowInsetsListener(mPager,
@@ -244,6 +257,15 @@ public class ArticleDetailActivity extends AppCompatActivity
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mCursor = null;
         mPagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View view) {
+        startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from
+                (ArticleDetailActivity.this)
+                .setType("text/plain")
+                .setText("Some sample text")
+                .getIntent(), getString(R.string.action_share)));
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {

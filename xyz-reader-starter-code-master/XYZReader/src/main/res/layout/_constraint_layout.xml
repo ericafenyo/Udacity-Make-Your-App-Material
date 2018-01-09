@@ -36,7 +36,6 @@
         android:paddingEnd="@dimen/activity_horizontal_padding"
         android:paddingStart="@dimen/activity_horizontal_padding"
         android:fontFamily="@string/font_family_medium"
-        android:paddingTop="@dimen/detail_article_title_text_padding_top"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

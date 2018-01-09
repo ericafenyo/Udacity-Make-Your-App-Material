@@ -11,8 +11,12 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -28,8 +32,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
@@ -66,6 +76,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +87,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         // configures toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setLogo(R.drawable.ic_logo);
@@ -84,14 +96,13 @@ public class ArticleListActivity extends AppCompatActivity implements
             getSupportActionBar().setDisplayUseLogoEnabled(true);
         }
 
+
         getLoaderManager().initLoader(0, null, this);
 
         if (savedInstanceState == null) {
             refresh();
         }
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
-
     }
 
     private void refresh() {
@@ -130,7 +141,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
     };
 
-
     private void updateRefreshingUI() {
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
     }
@@ -145,6 +155,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        //SnackBar
+        HelperMethods.makeSnack(coordinatorLayout, getString(R.string.loader_finished_message));
+
         Adapter adapter = new Adapter(cursor);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
@@ -164,7 +177,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         refresh();
         mSwipeRefreshLayout.setRefreshing(false);
     }
-
 
     /**
      * Adapter Class
@@ -208,7 +220,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, int position) {
             mCursor.moveToPosition(position);
             holder.txvArticleTitle.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             Date publishedDate = parsePublishedDate();
@@ -256,17 +268,15 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     /**
      * Uses Google.Pallets library To extract colors from Image Bitmaps
+     *
      * @param bitmap Image bitmap
      */
     public void setColorFromImage(final Bitmap bitmap) {
-        final Drawable shareIcon = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_share);
-
         if (bitmap != null) {
             Palette.from(bitmap).maximumColorCount(1000).generate(new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(Palette palette) {
                     Palette.Swatch swatch = palette.getDarkVibrantSwatch();
-
                 }
             });
         }

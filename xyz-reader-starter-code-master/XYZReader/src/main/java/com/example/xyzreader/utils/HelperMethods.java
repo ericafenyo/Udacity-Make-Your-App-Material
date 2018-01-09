@@ -9,6 +9,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.net.ConnectivityManager;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.widget.Toast;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -39,5 +42,15 @@ public class HelperMethods {
     public static int getTextPreferences(Context context, String key, int defaultValue) {
         preferences = context.getSharedPreferences(PREF_TEXT_SIZE, MODE_PRIVATE);
         return preferences.getInt(key, defaultValue);
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
+        assert connectivityManager != null;
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
+    }
+
+    public static void makeSnack(View view, String message){
+        Snackbar.make(view,message,Snackbar.LENGTH_SHORT).show();
     }
 }
