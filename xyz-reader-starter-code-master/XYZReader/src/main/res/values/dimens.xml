@@ -1,8 +1,8 @@
 <resources>
     <!--bis-->
     <dimen name="action_bar_image_height">200dp</dimen>
-    <dimen name="fab_elevation">2dp</dimen>
-    <dimen name="fab_press_translation_z">6dp</dimen>
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="fab_press_translation_z">12dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
     <dimen name="detail_photo_card_size">3dp</dimen>
     <dimen name="detail_photo_card_elevation">0dp</dimen>
@@ -34,4 +34,5 @@
     <dimen name="activity_horizontal_padding">16dp</dimen>
     <dimen name="activity_vertical_padding">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="app_bar_elevation">4dp</dimen>
 </resources>

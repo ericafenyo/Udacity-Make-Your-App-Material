@@ -42,7 +42,7 @@ import butterknife.ButterKnife;
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
 public class ArticleDetailActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+        implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, ViewPager.OnPageChangeListener {
     private Cursor mCursor;
     private long mStartId;
     private ViewPager mPager;
@@ -129,25 +129,30 @@ public class ArticleDetailActivity extends AppCompatActivity
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
-        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                super.onPageScrollStateChanged(state);
-                checkPreferenceChange();
-            }
 
-            @Override
-            public void onPageSelected(int position) {
-                if (mCursor != null) {
-                    mCursor.moveToPosition(position);
-                }
-                mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
 
-                //saves view pager scroll position
-                //this value is retrieved and used in configuration dialog box
-                HelperMethods.storeTextPreferences(getApplicationContext(), PREF_PAGE_POS, position);
-            }
-        });
+        mPager.addOnPageChangeListener(this);
+
+
+//        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//                super.onPageScrollStateChanged(state);
+//                checkPreferenceChange();
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                if (mCursor != null) {
+//                    mCursor.moveToPosition(position);
+//                }
+//                mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
+//
+//                //saves view pager scroll position
+//                //this value is retrieved and used in configuration dialog box
+//                HelperMethods.storeTextPreferences(getApplicationContext(), PREF_PAGE_POS, position);
+//            }
+//        });
 
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().getData() != null) {
@@ -266,6 +271,29 @@ public class ArticleDetailActivity extends AppCompatActivity
                 .setType("text/plain")
                 .setText("Some sample text")
                 .getIntent(), getString(R.string.action_share)));
+    }
+
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (mCursor != null) {
+            mCursor.moveToPosition(position);
+        }
+        mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
+
+        //saves view pager scroll position
+        //this value is retrieved and used in configuration dialog box
+        HelperMethods.storeTextPreferences(getApplicationContext(), PREF_PAGE_POS, position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        checkPreferenceChange();
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {

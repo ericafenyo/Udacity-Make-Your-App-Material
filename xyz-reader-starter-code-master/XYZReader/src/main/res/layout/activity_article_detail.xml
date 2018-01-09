@@ -10,6 +10,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:elevation="@dimen/app_bar_elevation"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/AppTheme.AppBarOverlay">
 
@@ -36,6 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
+        app:pressedTranslationZ="@dimen/fab_press_translation_z"
+        android:elevation="@dimen/fab_elevation"
         android:src="@drawable/ic_share"
         app:backgroundTint="@color/colorAccent"
         app:layout_anchor="@id/appbar"
