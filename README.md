@@ -19,7 +19,6 @@ Through this project, you will:
 
 ## Rubric
 
-Meets Specifications
 - [x] App uses the Design Support library and its provided widget types (FloatingActionButton, AppBarLayout, SnackBar, etc).
 
 - [x] App uses CoordinatorLayout for the main Activity.
@@ -44,4 +43,4 @@ Meets Specifications
 
 - [x] App utilizes stable release versions of all libraries, Gradle, and Android Studio.
 
-[xyz-reader]: https://github.com/ericafenyo/make-your-app-material/blob/master/images/xyz-reader.png
+[xyz-reader]: https://github.com/ericafenyo/make-your-app-material/raw/master/images/xyz-reader.png
